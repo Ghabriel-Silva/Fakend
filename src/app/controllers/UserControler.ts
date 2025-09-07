@@ -11,12 +11,18 @@ class UserController {
 
     private inicializeRoutes(){
         this.router.get('/', this.getAllUsers)
+        this.router.post('/',this.createdUser )
     }
 
     private async getAllUsers(req:Request, res:Response){
         const users = await UserRepository.getUser()
 
         res.status(200).json(users)
+    }
+
+    private async createdUser(req:Request, res:Response){
+        const userCreated = await UserRepository.newUser(req.body)
+        res.status(200).json(userCreated)
     }
 }
 const userRouter = new UserController().router
