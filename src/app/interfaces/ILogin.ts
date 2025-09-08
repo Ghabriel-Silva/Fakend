@@ -2,5 +2,8 @@ interface ILogin {
     email: string,
     password: string,
 }
-
-export { ILogin }
+interface ITokenData {
+    email:string, 
+    name:string
+}
+export { ILogin, ITokenData }

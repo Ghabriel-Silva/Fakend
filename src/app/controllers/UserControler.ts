@@ -1,6 +1,6 @@
 import { Response, Request,Router } from "express";
 import UserRepository from "../repository/UserRepository";
-
+import AutenticationMiddleware from "../middlewares/AuthMiddleware";
 
 class UserController {
     public router: Router
@@ -11,7 +11,7 @@ class UserController {
     }
 
     private inicializeRoutes(){
-        this.router.get('/', this.getUsers)
+        this.router.get('/', AutenticationMiddleware,  this.getUsers)
         this.router.post('/',this.createdUser )
     }
 

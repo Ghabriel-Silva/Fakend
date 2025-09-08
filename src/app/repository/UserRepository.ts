@@ -8,27 +8,39 @@ import { IResponseSuccess } from "../interfaces/IReponseSucess";
 import bcrypt from "bcrypt"
 import UserSchema from "../utils/validations/UserSchema";
 import * as yup from "yup";
+import Auth from "../utils/Auth";
 
 class UserRepository {
     private static userRepositoy = AppDataSource.getRepository(User)
 
-    static getEmail(email: string): Promise<IUserOutput | null> {
+    static getToEmail(email: string): Promise<IUserOutput | null> {
         return this.userRepositoy.findOneBy({ email })
     }
 
     static async userVerification(loginData: ILogin): Promise<{ status: string }> {
         const { email, password } = loginData
 
-        if (!email || !password) throw new Error('Missing email or password')
+        if (!email || !password) throw new ErrorExtension(404, 'Missing email or password')
 
-        const user = await this.getEmail(email)
+        const user = await this.getToEmail(email)
+
         if (!user?.password) {
             throw new ErrorExtension(401, "E-mail or password wrong")
+        } else {
+            const passwordVerificaton = await bcrypt.compare(password, user.password)
+            console.log(passwordVerificaton)
+            if (!passwordVerificaton) throw new ErrorExtension(401, "E-mail or password wrong")
         }
-        if (password !== user.password) {
-            throw new ErrorExtension(401, "E-mail or password wrong")
+
+        const payload = {
+            name: user.name,
+            email: user.email
         }
-        return formatSuccess(null, 'Login Efectuado with success')
+
+        const auth = new Auth()
+        const token = auth.JwtGenerator(payload)
+
+        return formatSuccess(token, 'Login Efectuado with success')
     }
 
     static async newUser(dataCreate: IUserInput): Promise<IResponseSuccess<IUserOutput>> {
@@ -45,18 +57,14 @@ class UserRepository {
             //depois coloco no banco de dados
             const createdUser = await this.userRepositoy.save(dataCreate)
             return formatSuccess(createdUser, 'User created with success!')
-            
+
         } catch (err) {
-            if(err instanceof yup.ValidationError){
+            if (err instanceof yup.ValidationError) {
                 throw new ErrorExtension(400, err.errors.join(","))
             }
             throw err;
         }
-
     }
-
-
-
 
 }
 
