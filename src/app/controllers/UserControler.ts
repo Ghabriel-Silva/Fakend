@@ -1,6 +1,7 @@
 import { Response, Request,Router } from "express";
 import UserRepository from "../repository/UserRepository";
 
+
 class UserController {
     public router: Router
 
@@ -10,13 +11,12 @@ class UserController {
     }
 
     private inicializeRoutes(){
-        this.router.get('/', this.getAllUsers)
+        this.router.get('/', this.getUsers)
         this.router.post('/',this.createdUser )
     }
 
-    private async getAllUsers(req:Request, res:Response){
-        const users = await UserRepository.getUser()
-
+    private async getUsers(req:Request, res:Response){
+        const users = await UserRepository.userVerification(req.body)
         res.status(200).json(users)
     }
 
