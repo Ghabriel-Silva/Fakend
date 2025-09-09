@@ -19,13 +19,13 @@ class UserController {
     }
     
     private async  loginUser(req:Request, res:Response){
-        const verifyUser = await UserRepository.userVerification(req.body)
+        const verifyUser = await UserRepository.loginVerification(req.body)
         res.status(200).json(verifyUser)
     }
 
     private async getUsers(req:Request, res:Response){
         const id = Number(req.params.id)
-        const users = await UserRepository.getUserToEmail(id)
+        const users  = await UserRepository.getUserToEmail(id)
         res.status(200).json(users)
     }
 

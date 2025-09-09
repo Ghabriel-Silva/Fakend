@@ -13,9 +13,12 @@ import Auth from "../utils/Auth";
 class UserRepository {
     private static userRepositoy = AppDataSource.getRepository(User)
 
-    static async  getUserToEmail(id:number):Promise<IUserOutput | null>{
-        if(!id) throw new ErrorExtension(401, 'User not found!')
-        const user = await this.userRepositoy.findOneBy({id})
+    static async getUserToEmail(id: number) {
+        if (!id) throw new ErrorExtension(401, 'id not found!')
+
+        const user = await this.userRepositoy.findOneBy({ id })
+        if (!user) throw new ErrorExtension(401, 'User not found!')
+
         return user
     }
 
@@ -23,7 +26,7 @@ class UserRepository {
         return this.userRepositoy.findOneBy({ email })
     }
 
-    static async userVerification(loginData: ILogin): Promise<IResponseSuccess<string>> {
+    static async loginVerification(loginData: ILogin): Promise<IResponseSuccess<string>> {
         const { email, password } = loginData
 
         if (!email || !password) throw new ErrorExtension(404, 'Missing email or password')
