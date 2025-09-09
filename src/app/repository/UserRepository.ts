@@ -13,11 +13,17 @@ import Auth from "../utils/Auth";
 class UserRepository {
     private static userRepositoy = AppDataSource.getRepository(User)
 
+    static async  getUserToEmail(id:number):Promise<IUserOutput | null>{
+        if(!id) throw new ErrorExtension(401, 'User not found!')
+        const user = await this.userRepositoy.findOneBy({id})
+        return user
+    }
+
     static getToEmail(email: string): Promise<IUserOutput | null> {
         return this.userRepositoy.findOneBy({ email })
     }
 
-    static async userVerification(loginData: ILogin): Promise<{ status: string }> {
+    static async userVerification(loginData: ILogin): Promise<IResponseSuccess<string>> {
         const { email, password } = loginData
 
         if (!email || !password) throw new ErrorExtension(404, 'Missing email or password')
@@ -27,8 +33,7 @@ class UserRepository {
         if (!user?.password) {
             throw new ErrorExtension(401, "E-mail or password wrong")
         } else {
-            const passwordVerificaton = await bcrypt.compare(password, user.password)
-            console.log(passwordVerificaton)
+            const passwordVerificaton = await bcrypt.compare(password, user.password) // true / false
             if (!passwordVerificaton) throw new ErrorExtension(401, "E-mail or password wrong")
         }
 

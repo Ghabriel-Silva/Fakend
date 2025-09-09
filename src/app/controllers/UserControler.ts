@@ -1,6 +1,8 @@
 import { Response, Request,Router } from "express";
 import UserRepository from "../repository/UserRepository";
 import AutenticationMiddleware from "../middlewares/AuthMiddleware";
+import { IUserOutput } from "../interfaces/IUser";
+import { IResponseSuccess } from "../interfaces/IReponseSucess";
 
 class UserController {
     public router: Router
@@ -11,17 +13,24 @@ class UserController {
     }
 
     private inicializeRoutes(){
-        this.router.get('/', AutenticationMiddleware,  this.getUsers)
+        this.router.post('/login', this.loginUser )
+        this.router.get('/:id', AutenticationMiddleware,  this.getUsers)
         this.router.post('/',this.createdUser )
+    }
+    
+    private async  loginUser(req:Request, res:Response){
+        const verifyUser = await UserRepository.userVerification(req.body)
+        res.status(200).json(verifyUser)
     }
 
     private async getUsers(req:Request, res:Response){
-        const users = await UserRepository.userVerification(req.body)
+        const id = Number(req.params.id)
+        const users = await UserRepository.getUserToEmail(id)
         res.status(200).json(users)
     }
 
     private async createdUser(req:Request, res:Response){
-        const userCreated = await UserRepository.newUser(req.body)
+        const userCreated:IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body)
         res.status(200).json(userCreated)
     }
 }

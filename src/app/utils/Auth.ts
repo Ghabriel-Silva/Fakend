@@ -12,9 +12,9 @@ const jwtDefaultConfig: SignOptions = {
 
 
 class Auth {
-    constructor(private jwtConfig?: SignOptions) {
-        if (!jwtConfig) {
-            this.jwtConfig = jwtDefaultConfig
+    constructor(private jwtConfig?: SignOptions) { //Se existir jwtConfig → usa a que você passou.
+        if (!jwtConfig) { 
+            this.jwtConfig = jwtDefaultConfig //Se não existir → define this.jwtConfig = jwtDefaultConfig.
         }
     }
 
@@ -29,6 +29,7 @@ class Auth {
 
         try{
             const validateJwt = Jwt.verify(token, SECRET)
+            console.log(validateJwt)
             return validateJwt
         } catch (erro){
             throw new ErrorExtension(401, "Token Not Found")
