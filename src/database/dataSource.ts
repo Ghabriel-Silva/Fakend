@@ -2,8 +2,9 @@ import "reflect-metadata"
 import { DataSource } from "typeorm"
 import User from "../app/entities/Users"
 import { CreateUserTable1757162636821 } from "../database/migrations/1757162636821-CreateUserTable"
-import { CreateSeedUsersTable1757166442235 } from "../database/migrations/1757166442235-CreateSeedUsersTable"
+import { CreateSeedUsersTable1757166442235 } from "./migrations/1757166442235-CreateSeedUsersTable"
 import { RenameBirthdateColunm1757168828987 } from "../database/migrations/1757168828987-RenameBirthdateColunm"
+import { GenerateUsers1757513188814} from "../database/migrations/1757513188814-generateUsers"
 
 export const AppDataSource = new DataSource({
     type: "mysql",
@@ -18,7 +19,8 @@ export const AppDataSource = new DataSource({
     migrations: [
         CreateUserTable1757162636821,      // cria a tabela inicialmente
         RenameBirthdateColunm1757168828987, // renomeia a coluna
-        CreateSeedUsersTable1757166442235,
+        CreateSeedUsersTable1757166442235, // cria um usuario inicial
+        GenerateUsers1757513188814 //Gero 200 usuarios
     ],
     subscribers: [],
 })

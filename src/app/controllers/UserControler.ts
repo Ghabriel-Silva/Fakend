@@ -15,7 +15,7 @@ class UserController {
     private inicializeRoutes(){
         this.router.post('/login', this.loginUser )
         this.router.get('/:id', AutenticationMiddleware,  this.getUsers)
-        this.router.post('/',this.createdUser )
+        this.router.post('/register',this.createdUser )
     }
     
     private async  loginUser(req:Request, res:Response){

@@ -3,6 +3,6 @@ import UserRouter from "../controllers/UserControler";
 
 const routers = Router()
 
-routers.use('/users', UserRouter)
+routers.use('/auth', UserRouter)
 
 export default routers
