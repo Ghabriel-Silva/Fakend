@@ -1,6 +1,8 @@
 import User from "../entities/Users";
 import { AppDataSource } from "../../database/dataSource";
-import { IUserInput, IUserOutput } from "../interfaces/IUser";
+import { IUserInput, IUserOutput, IUserPublic } from "../interfaces/IUser";
+import { ITokenData } from "../interfaces/ILogin";
+
 import { ILogin } from "../interfaces/ILogin";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { formatSuccess } from "../utils/ReponseSuccess"
@@ -13,14 +15,6 @@ import Auth from "../utils/Auth";
 class UserRepository {
     private static userRepositoy = AppDataSource.getRepository(User)
 
-    static async getUserToEmail(id: number) {
-        if (!id) throw new ErrorExtension(401, 'id not found!')
-
-        const user = await this.userRepositoy.findOneBy({ id })
-        if (!user) throw new ErrorExtension(401, 'User not found!')
-
-        return user
-    }
 
     static getToEmail(email: string): Promise<IUserOutput | null> {
         return this.userRepositoy.findOneBy({ email })
@@ -40,7 +34,8 @@ class UserRepository {
             if (!passwordVerificaton) throw new ErrorExtension(401, "E-mail or password wrong")
         }
 
-        const payload = {
+        const payload: ITokenData = {
+            userId: user.id,
             name: user.name,
             email: user.email
         }
@@ -72,6 +67,15 @@ class UserRepository {
             }
             throw err;
         }
+    }
+
+    static async getUserBytoken(email: string): Promise<IResponseSuccess<IUserPublic>> {
+        const user = await this.userRepositoy.findOneBy({ email })
+        if (!user) throw new ErrorExtension(404, "User not found");
+
+        const {password, ...userData} = user
+
+        return formatSuccess(userData, "User data fetched successfully")
     }
 
 }

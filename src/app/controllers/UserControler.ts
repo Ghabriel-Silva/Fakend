@@ -1,4 +1,4 @@
-import { Response, Request,Router } from "express";
+import { Response, Request, Router } from "express";
 import UserRepository from "../repository/UserRepository";
 import AutenticationMiddleware from "../middlewares/AuthMiddleware";
 import { IUserOutput } from "../interfaces/IUser";
@@ -12,26 +12,34 @@ class UserController {
         this.inicializeRoutes();
     }
 
-    private inicializeRoutes(){
-        this.router.post('/login', this.loginUser )
-        this.router.get('/:id', AutenticationMiddleware,  this.getUsers)
-        this.router.post('/register',this.createdUser )
+    private inicializeRoutes() {
+        this.router.post('/login', this.loginUser)
+        this.router.get('/me', AutenticationMiddleware, this.getInfoUser)// Pego dados do usuário com base no token 
+        this.router.post('/register', this.createdUser)
     }
-    
-    private async  loginUser(req:Request, res:Response){
+
+    private async loginUser(req: Request, res: Response) {
         const verifyUser = await UserRepository.loginVerification(req.body)
         res.status(200).json(verifyUser)
     }
 
-    private async getUsers(req:Request, res:Response){
-        const id = Number(req.params.id)
-        const users  = await UserRepository.getUserToEmail(id)
-        res.status(200).json(users)
+
+    private async createdUser(req: Request, res: Response) {
+        const userCreated: IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body)
+        res.status(200).json(userCreated)
     }
 
-    private async createdUser(req:Request, res:Response){
-        const userCreated:IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body)
-        res.status(200).json(userCreated)
+    private async getInfoUser(req: Request, res: Response) {
+        try {
+            const email = req.user?.email;
+            if (!email) return res.status(400).json({ status: "error", message: "User not found in token" })
+
+            const user = await UserRepository.getUserBytoken(email)
+
+            return res.status(200).json(user)
+        } catch (err) {
+            return res.status(500).json({ status: "error", message: "Internal server error" });
+        }
     }
 }
 const userRouter = new UserController().router
