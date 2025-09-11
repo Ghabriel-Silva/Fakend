@@ -4,6 +4,8 @@ import AutenticationMiddleware from "../middlewares/AuthMiddleware";
 import { IUserOutput } from "../interfaces/IUser";
 import { IResponseSuccess } from "../interfaces/IReponseSucess";
 
+
+
 class UserController {
     public router: Router
 
@@ -25,7 +27,9 @@ class UserController {
 
 
     private async createdUser(req: Request, res: Response) {
-        const userCreated: IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body)
+        const ipAddress = req.ip || "0.0.0.0" // fallback caso req.ip seja undefined
+
+        const userCreated: IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body, ipAddress )
         res.status(200).json(userCreated)
     }
 
