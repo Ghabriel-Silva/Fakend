@@ -55,8 +55,12 @@ class UserRepository {
             await UserSchema.validate(dataCreate, { abortEarly: false })
 
             //Verificando se n tenho email no banco de dados pois pe email unico
+            const email: string = dataCreate.email
+            const emailDb = await this.userRepositoy.findOneBy({email})
 
-            
+            if(emailDb){
+                throw new ErrorExtension(401, "Email alrary in data base")
+            }
 
             //verificação de limite de criação por IP
             const countByIp = await this.userRepositoy.count({

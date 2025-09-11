@@ -18,6 +18,7 @@ class UserController {
         this.router.post('/login', this.loginUser)
         this.router.get('/me', AutenticationMiddleware, this.getInfoUser)// Pego dados do usuário com base no token 
         this.router.post('/register', this.createdUser)
+        this.router.delete('/delete', AutenticationMiddleware, this.deleteUser)
     }
 
     private async loginUser(req: Request, res: Response) {
@@ -44,6 +45,10 @@ class UserController {
         } catch (err) {
             return res.status(500).json({ status: "error", message: "Internal server error" });
         }
+    }
+
+    private async deleteUser(req:Request, res:Response){
+       return res.status(200).json({mensage:"requsição puxando"})
     }
 }
 const userRouter = new UserController().router
