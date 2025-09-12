@@ -7,4 +7,5 @@ interface ITokenData {
     email: string;
     name?: string;
 }
+
 export { ILogin, ITokenData }

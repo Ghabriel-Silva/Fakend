@@ -2,25 +2,26 @@ import User from "../entities/Users";
 import { AppDataSource } from "../../database/dataSource";
 import { IUserInput, IUserOutput, IUserPublic } from "../interfaces/IUser";
 import { ITokenData } from "../interfaces/ILogin";
-
 import { ILogin } from "../interfaces/ILogin";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { formatSuccess } from "../utils/ReponseSuccess"
 import { IResponseSuccess } from "../interfaces/IReponseSucess";
 import bcrypt from "bcrypt"
 import UserSchema from "../utils/validations/UserSchema";
+import UserSchemaEdite from "../utils/validations/UserSchemaEdite";
 import * as yup from "yup";
 import Auth from "../utils/Auth";
 import { MoreThan } from "typeorm";
 import { addDays } from 'date-fns'; //Ela fornece funções prontas para manipular datas de forma imutável (ou seja, não altera a data original).
+import { IEditeUser } from "../interfaces/IEditeUser";
 
 
 class UserRepository {
-    private static userRepositoy = AppDataSource.getRepository(User)
+    private static userRepository = AppDataSource.getRepository(User)
 
 
     static getToEmail(email: string): Promise<IUserOutput | null> {
-        return this.userRepositoy.findOneBy({ email })
+        return this.userRepository.findOneBy({ email })
     }
 
     static async loginVerification(loginData: ILogin): Promise<IResponseSuccess<string>> {
@@ -54,16 +55,16 @@ class UserRepository {
             //Primeiro valido os dados com Yup
             await UserSchema.validate(dataCreate, { abortEarly: false })
 
-            //Verificando se n tenho email no banco de dados pois pe email unico
+            //Verificando se n tenho email no banco de dados pois o email unico
             const email: string = dataCreate.email
-            const emailDb = await this.userRepositoy.findOneBy({email})
+            const emailDb = await this.userRepository.findOneBy({ email })
 
-            if(emailDb){
+            if (emailDb) {
                 throw new ErrorExtension(401, "Email alrary in data base")
             }
 
             //verificação de limite de criação por IP
-            const countByIp = await this.userRepositoy.count({
+            const countByIp = await this.userRepository.count({
                 where: {
                     ip_address: ipAddress,
                     is_fake: false,
@@ -88,7 +89,7 @@ class UserRepository {
                 expires_at: addDays(new Date(), 1) // expira em 1 dia
             }
             //depois coloco no banco de dados
-            const createdUser = await this.userRepositoy.save(userToSave)
+            const createdUser = await this.userRepository.save(userToSave)
             return formatSuccess(createdUser, 'User created with success!')
 
         } catch (err) {
@@ -100,7 +101,7 @@ class UserRepository {
     }
 
     static async getUserBytoken(email: string): Promise<IResponseSuccess<IUserPublic>> {
-        const user = await this.userRepositoy.findOneBy({ email })
+        const user = await this.userRepository.findOneBy({ email })
         if (!user) throw new ErrorExtension(404, "User not found");
 
         const { password, ...userData } = user
@@ -108,6 +109,76 @@ class UserRepository {
         return formatSuccess(userData, "User data fetched successfully")
     }
 
+
+    static async deleteUserByToken(deleteUser: ITokenData): Promise<IResponseSuccess<null>> {
+        const { email } = deleteUser
+        if (!email) {
+            throw new ErrorExtension(400, "Email required in token")
+        }
+
+        const result = await this.userRepository
+            .createQueryBuilder()
+            .delete()
+            .from(User)
+            .where("email = :email", { email })
+            .andWhere("is_fake = :isFake", { isFake: false })
+            .execute();
+
+
+        if (result.affected === 0) {
+            throw new ErrorExtension(404, "This account can´t be deleted");
+        }
+        return formatSuccess(null, "User deleted successfully")
+    }
+
+
+
+    // Editando usuário
+    static async editeUser(email: string, dataEdite: IEditeUser): Promise<IResponseSuccess<null>> {
+        try {
+            await UserSchemaEdite.validate(dataEdite, { abortEarly: false })
+
+            const user = await this.userRepository.findOneBy({ email });
+            if (!user) {
+                throw new ErrorExtension(404, "User not found");
+            }
+
+            if (user?.is_fake === true) {
+                throw new ErrorExtension(400, "You can't edit this account")
+            }
+
+            const dataToUpdate: Partial<IEditeUser> = {};
+
+            if (dataEdite.name !== undefined && dataEdite.name !== user.name) {
+                dataToUpdate.name = dataEdite.name;
+            }
+            if (dataEdite.last_name !== undefined && dataEdite.last_name !== user.last_name) {
+                dataToUpdate.last_name = dataEdite.last_name;
+            }
+            if (dataEdite.sexo !== undefined && dataEdite.sexo !== user.sexo) {
+                dataToUpdate.sexo = dataEdite.sexo;
+            }
+
+
+            if (dataEdite.birth_date !== undefined) {
+                dataToUpdate.birth_date = dataEdite.birth_date;
+            }
+
+            if (Object.keys(dataToUpdate).length === 0) {
+                return formatSuccess(null, "No changes detected");
+            }
+
+            await this.userRepository.save({ ...user, ...dataToUpdate }); //pega todos os campos do usuário que você buscou no banco. ...dataToUpdate sobrepõe apenas os campos que você quer atualizar
+
+            return formatSuccess(null, "User edited successfully");
+
+        } catch (err) {
+            if (err instanceof yup.ValidationError) {
+                throw new ErrorExtension(400, err.errors.join(","))
+            }
+            throw err
+        }
+    }
 }
 
 export default UserRepository

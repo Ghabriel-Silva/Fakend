@@ -18,7 +18,7 @@ interface IUserOutput extends IUserInput {
     id: number;
     name: string;
     last_name: string;
-    birth_date: Date;
+    birth_date: Date ;
     sexo: string;
     email: string;
     active: boolean;
