@@ -7,6 +7,7 @@ import ErrorExtension from "../utils/ErrorExtensions";
 import { ITokenData } from "../interfaces/ILogin";
 import { formatSuccess } from "../utils/ReponseSuccess"
 import { IEditeUser } from "../interfaces/IEditeUser";
+import { IChangePassword } from "../interfaces/IChangePassword";
 
 
 
@@ -25,6 +26,7 @@ class UserController {
         this.router.post('/register', this.createdUser)
         this.router.delete('/delete', AutenticationMiddleware, this.deleteUser)
         this.router.put('/edite', AutenticationMiddleware, this.editeUser)
+        this.router.patch('/edite/password', AutenticationMiddleware, this.editePassword)
     }
 
     private async loginUser(req: Request, res: Response) {
@@ -62,16 +64,25 @@ class UserController {
     }
 
     private async editeUser(req: Request, res: Response) {
-        const editeData:IEditeUser = req.body
-        const userToken:ITokenData = req.user as ITokenData
+        const editeData: IEditeUser = req.body
+        const userToken: ITokenData = req.user as ITokenData
 
-        if(!userToken?.email){
+        if (!userToken?.email) {
             throw new ErrorExtension(401, "Token not provided");
         }
 
         const userEditdado = await UserRepository.editeUser(userToken.email, editeData)
 
         res.status(200).json(userEditdado)
+    }
+
+    private async editePassword(req: Request, res: Response) {
+        const email:string | undefined = req.user?.email
+        const changePassaword:IChangePassword = req.body
+        
+        const resultPassword = await UserRepository.editePassword(email, changePassaword)
+
+        res.status(200).json(resultPassword)
     }
 
 

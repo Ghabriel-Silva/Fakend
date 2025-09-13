@@ -3,19 +3,19 @@ import * as yup from "yup";
 const EditUserSchema = yup.object().shape({
     name: yup
         .string()
-        .min(2, "O campo nome deve ter pelo menos 2 caracteres")
-        .max(100, "O campo nome não pode ter mais de 100 caracteres")
+        .min(2, "The name field must have at least 2 characters")
+        .max(100, "The name field cannot have more than 100 characters")
         .notRequired(),
 
     last_name: yup
         .string()
-        .min(2, "O campo sobrenome deve ter pelo menos 2 caracteres")
-        .max(100, "O campo sobrenome não pode ter mais de 100 caracteres")
+        .min(2, "The last name field must have at least 2 characters")
+        .max(100, "The last name field cannot have more than 100 characters")
         .notRequired(),
 
     sexo: yup
         .string()
-        .oneOf(["M", "F"], "O campo sexo deve ser 'M' ou 'F'")
+        .oneOf(["M", "F"], "The gender field must be 'M' or 'F'")
         .notRequired(),
 
     birth_date: yup

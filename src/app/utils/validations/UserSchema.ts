@@ -3,42 +3,42 @@ import * as yup from "yup";
 const UserSchema = yup.object().shape({
   name: yup
     .string()
-    .required("O campo nome é obrigatório")
-    .min(2, "O campo nome deve ter pelo menos 3 caracteres")
-    .max(100, "O campo nome não pode ter mais de 100 caracteres"),
+    .required("The name field is required")
+    .min(2, "The name field must have at least 2 characters")
+    .max(100, "The name field cannot have more than 100 characters"),
 
   last_name: yup
     .string()
-    .required("O campo sobrenome é obrigatório")
-    .min(2, "O campo sobrenome deve ter pelo menos 2 caracteres")
-    .max(100, "O campo sobrenome não pode ter mais de 100 caracteres"),
+    .required("The last name field is required")
+    .min(2, "The last name field must have at least 2 characters")
+    .max(100, "The last name field cannot have more than 100 characters"),
 
   email: yup
     .string()
-    .email("O campo email deve ser um email válido")
-    .required("O campo email é obrigatório")
-    .min(10, "O campo email deve ter pelo menos 10 caracteres")
-    .max(100, "O campo email não pode ter mais de 100 caracteres"),
+    .email("The email field must be a valid email")
+    .required("The email field is required")
+    .min(10, "The email field must have at least 10 characters")
+    .max(100, "The email field cannot have more than 100 characters"),
 
   password: yup
     .string()
-    .required("O campo senha é obrigatório")
-    .min(6, "O campo senha deve ter pelo menos 6 caracteres")
-    .max(100, "O campo senha não pode ter mais de 100 caracteres"),
+    .required("The password field is required")
+    .min(6, "The password field must have at least 6 characters")
+    .max(100, "The password field cannot have more than 100 characters"),
 
   birth_date: yup
     .string()
-    .typeError("O campo data de nascimento deve ser uma data"),
+    .typeError("The birth date field must be a valid date"),
 
   sexo: yup
     .string()
-    .required("O campo sexo é obrigatório")
-    .oneOf(["M", "F"], "O campo sexo deve ser 'M' ou 'F'"),
+    .required("The gender field is required")
+    .oneOf(["M", "F"], "The gender field must be 'M' or 'F'"),
 
   active: yup
     .boolean()
-    .typeError("O campo ativo deve ser um valor booleano")
-    .notRequired(), // opcional
+    .typeError("The active field must be a boolean value")
+    .notRequired(), // optional
 });
 
 export default UserSchema;

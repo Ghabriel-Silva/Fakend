@@ -9,11 +9,13 @@ import { IResponseSuccess } from "../interfaces/IReponseSucess";
 import bcrypt from "bcrypt"
 import UserSchema from "../utils/validations/UserSchema";
 import UserSchemaEdite from "../utils/validations/UserSchemaEdite";
+import UserSchemaPassword from "../utils/validations/UserSchemaPassword";
 import * as yup from "yup";
 import Auth from "../utils/Auth";
 import { MoreThan } from "typeorm";
 import { addDays } from 'date-fns'; //Ela fornece funções prontas para manipular datas de forma imutável (ou seja, não altera a data original).
 import { IEditeUser } from "../interfaces/IEditeUser";
+import { IChangePassword } from "../interfaces/IChangePassword";
 
 
 class UserRepository {
@@ -174,10 +176,57 @@ class UserRepository {
 
         } catch (err) {
             if (err instanceof yup.ValidationError) {
-                throw new ErrorExtension(400, err.errors.join(","))
+                throw new ErrorExtension(400, err.errors.join(", "))
             }
             throw err
         }
+    }
+
+    static async editePassword(email: string | undefined, changePassaword: IChangePassword) {
+        try {
+            await UserSchemaPassword.validate(changePassaword, { abortEarly: false })
+            const { currentPassword, newPassword } = changePassaword
+
+            if (!email) {
+                throw new Error("Email is required");
+            }
+
+            const user = await this.userRepository.findOne({
+                select: ["id", "password"],
+                where: { email: email }
+               
+            })
+
+            if (!user) {
+                throw new ErrorExtension(404, "User not found");
+            }
+
+            const isSamePassword = await bcrypt.compare(newPassword, user?.password);
+            if (isSamePassword) {
+                throw new ErrorExtension(401, "The new password cannot be the same as the last one");
+            }
+            
+            const isPasswordValid: boolean = await bcrypt.compare(currentPassword, user.password)
+
+            if (!isPasswordValid) {
+                throw new ErrorExtension(401, "Current password is incorrect")
+            }
+
+            const hashedPassword: string = await bcrypt.hash(newPassword, 10)
+
+            await this.userRepository.update(
+                { id: user.id, email: email },
+                { password: hashedPassword }
+            )
+
+            return formatSuccess(null, 'Password Edite with success!')
+        } catch (err) {
+            if (err instanceof yup.ValidationError) {
+                throw new ErrorExtension(400, err.errors.join(", "))
+            }
+            throw err
+        }
+
     }
 }
 
