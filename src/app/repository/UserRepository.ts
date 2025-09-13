@@ -193,19 +193,26 @@ class UserRepository {
 
             const user = await this.userRepository.findOne({
                 select: ["id", "password"],
-                where: { email: email }
-               
+                where: {
+                    email: email,
+                    is_fake: false
+                }
+
             })
 
             if (!user) {
-                throw new ErrorExtension(404, "User not found");
+                throw new ErrorExtension(
+                    404,
+                    "You can't change this password because it's a fake test account");
             }
 
             const isSamePassword = await bcrypt.compare(newPassword, user?.password);
             if (isSamePassword) {
-                throw new ErrorExtension(401, "The new password cannot be the same as the last one");
+                throw new ErrorExtension(
+                    401,
+                    "The new password cannot be the same as the last one");
             }
-            
+
             const isPasswordValid: boolean = await bcrypt.compare(currentPassword, user.password)
 
             if (!isPasswordValid) {

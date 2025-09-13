@@ -8,6 +8,7 @@ import { GenerateUsers1757513188814 } from "../database/migrations/1757513188814
 import { AddIsFakeAndExpiresAtToUsers1757600347289 } from "../database/migrations/1757600347289-AddIsFakeAndExpiresAtToUsers"
 import { AddIPusuario1757601423333 } from "../database/migrations/1757601423333-AddIPusuario"
 
+
 export const AppDataSource = new DataSource({
     type: "mysql",
     host: "localhost",
@@ -23,8 +24,8 @@ export const AppDataSource = new DataSource({
         RenameBirthdateColunm1757168828987, // renomeia a coluna
         CreateSeedUsersTable1757166442235, // cria um usuario inicial
         GenerateUsers1757513188814, //Gero 200 usuarios
-        AddIsFakeAndExpiresAtToUsers1757600347289 ,// atualiza bd com novas colunas
-         AddIPusuario1757601423333
+        AddIsFakeAndExpiresAtToUsers1757600347289,// atualiza bd com novas colunas
+        AddIPusuario1757601423333
     ],
     subscribers: [],
 })
