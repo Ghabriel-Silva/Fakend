@@ -1,12 +1,15 @@
 import "reflect-metadata"
 import { DataSource } from "typeorm"
 import User from "../app/entities/Users"
+import { Product } from "../app/entities/Products"
 import { CreateUserTable1757162636821 } from "../database/migrations/1757162636821-CreateUserTable"
 import { CreateSeedUsersTable1757166442235 } from "./migrations/1757166442235-CreateSeedUsersTable"
 import { RenameBirthdateColunm1757168828987 } from "../database/migrations/1757168828987-RenameBirthdateColunm"
 import { GenerateUsers1757513188814 } from "../database/migrations/1757513188814-generateUsers"
 import { AddIsFakeAndExpiresAtToUsers1757600347289 } from "../database/migrations/1757600347289-AddIsFakeAndExpiresAtToUsers"
 import { AddIPusuario1757601423333 } from "../database/migrations/1757601423333-AddIPusuario"
+import {ProductsGenerate1757847710514} from "../database/migrations/1757847710514-ProductsGenerate"
+import {CreateColumsProducts1757848877069} from "../database/migrations/1757848877069-CreateColumsProducts"
 
 
 export const AppDataSource = new DataSource({
@@ -18,14 +21,17 @@ export const AppDataSource = new DataSource({
     database: "crud_users",
     synchronize: false,
     logging: false,
-    entities: [User],
+    entities: [User, Product],
     migrations: [
         CreateUserTable1757162636821,      // cria a tabela inicialmente
         RenameBirthdateColunm1757168828987, // renomeia a coluna
         CreateSeedUsersTable1757166442235, // cria um usuario inicial
         GenerateUsers1757513188814, //Gero 200 usuarios
         AddIsFakeAndExpiresAtToUsers1757600347289,// atualiza bd com novas colunas
-        AddIPusuario1757601423333
+        AddIPusuario1757601423333, //Adicionando coluna IP user
+        ProductsGenerate1757847710514,//Gerando tabela de produtos
+        CreateColumsProducts1757848877069 //Gerando colunas created_at e update_at
+
     ],
     subscribers: [],
 })
