@@ -10,6 +10,7 @@ import { AddIsFakeAndExpiresAtToUsers1757600347289 } from "../database/migration
 import { AddIPusuario1757601423333 } from "../database/migrations/1757601423333-AddIPusuario"
 import {ProductsGenerate1757847710514} from "../database/migrations/1757847710514-ProductsGenerate"
 import {CreateColumsProducts1757848877069} from "../database/migrations/1757848877069-CreateColumsProducts"
+import {GenerateFakeProdutcs1757848363698} from "../database/migrations/1757848363698-GenerateFakeProdutcs"
 
 
 export const AppDataSource = new DataSource({
@@ -30,7 +31,8 @@ export const AppDataSource = new DataSource({
         AddIsFakeAndExpiresAtToUsers1757600347289,// atualiza bd com novas colunas
         AddIPusuario1757601423333, //Adicionando coluna IP user
         ProductsGenerate1757847710514,//Gerando tabela de produtos
-        CreateColumsProducts1757848877069 //Gerando colunas created_at e update_at
+        CreateColumsProducts1757848877069, //Gerando colunas created_at e update_at
+            GenerateFakeProdutcs1757848363698
 
     ],
     subscribers: [],
