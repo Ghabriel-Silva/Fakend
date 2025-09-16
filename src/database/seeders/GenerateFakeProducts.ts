@@ -14,14 +14,14 @@ const usedImages: Record<string, Set<string>> = {};
 // Armazena nomes já usados globalmente
 const usedNames: Set<string> = new Set();
 
-const ProductsGenerate = async (count: number): Promise<IProduct[]> => {
-    const productPromises: Promise<IProduct>[] = [];
+const ProductsGenerate = async (count: number): Promise<IProduct[]> => { //uma Promise que, quando resolvida, retorna um array de produtos (IProduct[])
+    const productPromises: Promise<IProduct>[] = []; // aray de promesa onde cada promessa resolve para o Iproduct
 
     for (let i = 0; i < count; i++) {
         const promise = (async (): Promise<IProduct> => {
-            const categoryObj = faker.helpers.arrayElement(categories);
+            const categoryObj = faker.helpers.arrayElement(categories); //pega um elemento aleatorio do array
             const category = categoryObj.name;
-            const keyword = faker.helpers.arrayElement(categoryObj.keywords);
+            const keyword = faker.helpers.arrayElement(categoryObj.keywords); //Pegando uma keywords aleatorio do array
 
             const price = Number(faker.commerce.price({ min: 50, max: 2000 }));
             const price_min = price - faker.number.int({ min: 5, max: 50 });
@@ -30,9 +30,9 @@ const ProductsGenerate = async (count: number): Promise<IProduct[]> => {
             let name: string;
             let attemptsName = 0;
             do {
-                name = `${faker.commerce.productAdjective()} ${keyword}`;
+                name = `${faker.commerce.productAdjective()} ${keyword}`; // gera um adjetivo de produto aleatório, por exemplo:"Prático", "Incrível", "Inteligente", "Durável"
                 attemptsName++;
-            } while (usedNames.has(name) && attemptsName < 10);
+            } while (usedNames.has(name) && attemptsName < 10); //repete apenas se os dois forem true
             usedNames.add(name); //adciona name gerado para que n seja repetido
 
             const description: string = faker.commerce.productDescription();
@@ -43,7 +43,7 @@ const ProductsGenerate = async (count: number): Promise<IProduct[]> => {
             const size: string = faker.helpers.arrayElement(["Small", "Medium", "Large"]);
 
             // Inicializa Set para keyword se não existir
-            if (!usedImages[keyword]) {
+            if (!usedImages[keyword]) { //se n existir essa chave cria uma keyword
                 usedImages[keyword] = new Set();
             }
 
@@ -54,7 +54,7 @@ const ProductsGenerate = async (count: number): Promise<IProduct[]> => {
             do {
                 image_url = await getImageUrl(keyword);
                 attemptsImage++;
-            } while (usedImages[keyword].has(image_url) && attemptsImage < 10);
+            } while (usedImages[keyword].has(image_url) && attemptsImage < 10); //repete apenas se os dois forem true
 
             usedImages[keyword].add(image_url); // marca a URL como usada
 
