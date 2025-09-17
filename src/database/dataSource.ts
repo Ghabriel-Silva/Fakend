@@ -11,15 +11,16 @@ import { AddIPusuario1757601423333 } from "../database/migrations/1757601423333-
 import {ProductsGenerate1757847710514} from "../database/migrations/1757847710514-ProductsGenerate"
 import {CreateColumsProducts1757848877069} from "../database/migrations/1757848877069-CreateColumsProducts"
 import {GenerateFakeProdutcs1757848363698} from "../database/migrations/1757848363698-GenerateFakeProdutcs"
-
+import dotenv from "dotenv"
+dotenv.config()
 
 export const AppDataSource = new DataSource({
-    type: "mysql",
-    host: "localhost",
-    port: 3306,
-    username: "root",
-    password: "@Gs189970",
-    database: "crud_users",
+    type:process.env.DB_TYPE as any,
+    host: process.env.DB_HOST,
+    port: Number(process.env.DB_PORT),
+    username: process.env.DB_USER,
+    password: process.env.DB_PASSWORD,
+    database: process.env.DB_NAME ,
     synchronize: false,
     logging: false,
     entities: [User, Product],

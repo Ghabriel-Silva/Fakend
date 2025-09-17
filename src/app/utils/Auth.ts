@@ -1,9 +1,11 @@
 import Jwt, { SignOptions } from "jsonwebtoken";
 import { ITokenData } from "../interfaces/ILogin";
 import ErrorExtension from "./ErrorExtensions";
+import dotenv from "dotenv"
+dotenv.config()
 
-const SECRET = 'senhasecreta'
 
+const SECRET = process.env.JWT_SECRET as string
 const jwtDefaultConfig: SignOptions = {
     algorithm: "HS256",
     expiresIn: "1h",
