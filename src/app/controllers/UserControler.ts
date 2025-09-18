@@ -6,6 +6,7 @@ import { ITokenData } from "../interfaces/ILogin";
 import { IEditeUser } from "../interfaces/IEditeUser";
 import { IChangePassword } from "../interfaces/IChangePassword";
 
+
 class UserController {
     public router: Router
 

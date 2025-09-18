@@ -44,3 +44,5 @@ export class Product {
     @UpdateDateColumn({type: "timestamp"})
     updadet_at: Date;
 }
+
+export default  Product
