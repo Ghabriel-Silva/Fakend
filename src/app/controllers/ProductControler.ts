@@ -32,20 +32,19 @@ class ProductControler {
     }
 
     private async stockProducts(req: Request, res: Response): Promise<void> {
-        const { min, max } = req.query
+        const { min } = req.query
 
         if (!min) {
             throw new ErrorExtension(400, 'Parameters min is required')
         }
-        const minValor: number = Number(min)
-        const maxValor: number | undefined = max ? Number(max) : undefined
 
-        if (isNaN(minValor) || (max && isNaN(maxValor!))) {
+        const minValor: number = Number(min)
+
+        if (isNaN(minValor)) {
             throw new ErrorExtension(400, "Parameters must be numbers")
-           
         }
         const minStockProducts: IProduct[] =
-            await ProductRepository.getMinStockProducts(minValor, maxValor)
+            await ProductRepository.getMinStockProducts(minValor)
 
         res.status(200).json({
             status: "success",
@@ -59,6 +58,29 @@ class ProductControler {
     }
 
     private async filterProducts(req: Request, res: Response) {
+        const { min, max } = req.query
+
+        if (!min) {
+            throw new ErrorExtension(404, "Min value is required!")
+        }
+        const minValue: number = Number(min)
+        const maxValue: number | undefined = max ? Number(max) : undefined
+
+
+        //validando se são numeros
+        if (isNaN(minValue) || (max !== undefined && isNaN(maxValue!))) {
+            throw new ErrorExtension(400, "Min and Max must be valid numbers!")
+        }
+        if (maxValue !== undefined && minValue >= maxValue) {
+            throw new ErrorExtension(400, "Min value must be less than Max value!")
+        }
+        const products: IProduct[] = await ProductRepository.getMinMaxPriceProducts(minValue, maxValue!)
+
+        res.status(200).json({
+            status: "success",
+            message: maxValue ? `Products with price between ${minValue} and ${maxValue} loaded successfully` : `Products with price greater than ${minValue} loaded successfully`,
+            data: products
+        } as IResponseSuccess<IProduct[]>)
 
     }
 
