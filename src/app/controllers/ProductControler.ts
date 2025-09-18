@@ -17,8 +17,8 @@ class ProductControler {
     private inicialezeRouter() {
         this.router.get('/', this.allProducts)//search all products
         this.router.get('/stock', this.stockProducts) //search stock
-        this.router.get('/category/:category', this.categoryProducts) //Search by category
         this.router.get('/filter', this.filterProducts) //Search by min and max price, for exemplo: GET /products/filter?minPrice=500&maxPrice=1500
+    
     }
 
     private async allProducts(req: Request, res: Response): Promise<void> {
@@ -53,28 +53,33 @@ class ProductControler {
         } as IResponseSuccess<IProduct[]>);
     }
 
-    private async categoryProducts(req: Request, res: Response) {
-
-    }
 
     private async filterProducts(req: Request, res: Response) {
-        const { min, max } = req.query
+        const { min, max, category } = req.query
 
-        if (!min) {
-            throw new ErrorExtension(404, "Min value is required!")
-        }
-        const minValue: number = Number(min)
+        // if (!min) {
+        //     throw new ErrorExtension(404, "Min value is required!")
+        // }
+        const minValue: number | undefined = min ? Number(min) : undefined
         const maxValue: number | undefined = max ? Number(max) : undefined
 
-
         //validando se são numeros
-        if (isNaN(minValue) || (max !== undefined && isNaN(maxValue!))) {
+        if ((min !== undefined && isNaN(minValue!)) || (max !== undefined && isNaN(maxValue!))) {
             throw new ErrorExtension(400, "Min and Max must be valid numbers!")
         }
-        if (maxValue !== undefined && minValue >= maxValue) {
+        if (minValue !== undefined && maxValue !== undefined && minValue >= maxValue) {
             throw new ErrorExtension(400, "Min value must be less than Max value!")
         }
-        const products: IProduct[] = await ProductRepository.getMinMaxPriceProducts(minValue, maxValue!)
+        if (category && typeof category !== "string") {
+            throw new Error("Category mustF be a string")
+        }
+        const validatCategory: string[] = await ProductRepository.getCategorysProducts()
+
+        if (category && !validatCategory.map(c => c.toLowerCase()).includes(category.toLowerCase())) {
+            throw new ErrorExtension(400, "Invalid category!");
+        }
+
+        const products: IProduct[] = await ProductRepository.getMinMaxPriceProducts(minValue, maxValue, category as string | undefined)
 
         res.status(200).json({
             status: "success",
@@ -83,8 +88,6 @@ class ProductControler {
         } as IResponseSuccess<IProduct[]>)
 
     }
-
-
 }
 
 const ProductRouter = new ProductControler().router

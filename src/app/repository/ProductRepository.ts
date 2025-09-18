@@ -1,4 +1,4 @@
-import { Between, MoreThan } from "typeorm"
+import { Between, LessThanOrEqual, MoreThan, MoreThanOrEqual } from "typeorm"
 import { AppDataSource } from "../../database/dataSource"
 import Product from "../entities/Products"
 import { IProduct } from "../interfaces/Products/IProducts"
@@ -30,27 +30,36 @@ class ProductRepository {
         return products
     }
 
+    static async getCategorysProducts(): Promise<string[]> {
+        const categories = await this.productRepository
+            .createQueryBuilder("product") // alias tem que ser "product"
+            .select("DISTINCT product.category", "category")
+            .getRawMany();
 
-    static async getMinMaxPriceProducts(min: number, max: number): Promise<IProduct[]> {
-        let productMinMax: IProduct[]
-        if (max !== undefined) {
-            productMinMax = await this.productRepository.find({
-                where: {
-                    price: Between(min, max)
-                }
-            })
-        } else {
-            productMinMax = await this.productRepository.find({
-                where: {
-                    price: MoreThan(min)
-                }
-            })
-        }
-        if (productMinMax.length === 0) {
-            throw new ErrorExtension(404, "No products found within the given price range");
+        return categories.map(c => c.category);
+    }
+    static async getMinMaxPriceProducts(min?: number, max?: number, category?: string): Promise<IProduct[]> {
+        let productFilter: IProduct[]
+        const where: any = {}
+
+        if (min !== undefined && max !== undefined) {
+            where.price = Between(min, max)
+        } else if (min !== undefined) {
+            where.price = MoreThanOrEqual(min)
+        } else if (max !== undefined) {
+            where.price = LessThanOrEqual(max)
         }
 
-        return productMinMax
+        if (category) {
+            where.category = category
+        }
+
+        productFilter = await this.productRepository.find({ where })
+
+        if (productFilter.length === 0) {
+            throw new ErrorExtension(404, "No products found with the given filters");
+        }
+        return productFilter
 
     }
 }
