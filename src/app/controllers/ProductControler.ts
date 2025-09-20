@@ -57,9 +57,6 @@ class ProductControler {
     private async filterProducts(req: Request, res: Response) {
         const { min, max, category } = req.query
 
-        // if (!min) {
-        //     throw new ErrorExtension(404, "Min value is required!")
-        // }
         const minValue: number | undefined = min ? Number(min) : undefined
         const maxValue: number | undefined = max ? Number(max) : undefined
 

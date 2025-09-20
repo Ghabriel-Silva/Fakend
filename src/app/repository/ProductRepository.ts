@@ -32,11 +32,12 @@ class ProductRepository {
 
     static async getCategorysProducts(): Promise<string[]> {
         const categories = await this.productRepository
-            .createQueryBuilder("product") // alias tem que ser "product"
-            .select("DISTINCT product.category", "category")
+            .createQueryBuilder("product") // alias tem que ser "product" na verdade pode ser qualquer nome 
+            .select("DISTINCT product.category", "category") //pede ao banco apenas valores únicos da coluna category da tabela product.
             .getRawMany();
 
-        return categories.map(c => c.category);
+        return categories.map(c => c.category); // retorno ["Electronics", "Furniture"]
+
     }
     static async getMinMaxPriceProducts(min?: number, max?: number, category?: string): Promise<IProduct[]> {
         let productFilter: IProduct[]
