@@ -15,7 +15,7 @@ const EditUserSchema = yup.object().shape({
 
     sexo: yup
         .string()
-        .oneOf(["M", "F"], "The gender field must be 'M' or 'F'")
+        .oneOf(["M", "F", "m", "f"], "The gender field must be 'M' or 'F' (uppercase or lowercase).")
         .notRequired(),
 
     birth_date: yup
