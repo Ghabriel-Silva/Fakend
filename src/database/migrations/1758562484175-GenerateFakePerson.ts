@@ -6,14 +6,14 @@ import { Person } from "../../app/entities/Persons";
 
 export class GenerateFakePerson1758562484175 implements MigrationInterface {
 
-    public async up(queryRunner: QueryRunner): Promise<void> {
+    public async up(): Promise<void> {
         const userRepository = AppDataSource.getRepository(Person)
         const persons = await geraFakePersons(1000)
         await userRepository.save(persons)
     }
 
-    public async down(queryRunner: QueryRunner): Promise<void> {
-         await AppDataSource.getRepository(Person).clear();
+    public async down(): Promise<void> {
+        await AppDataSource.getRepository(Person).clear();
     }
 
 }

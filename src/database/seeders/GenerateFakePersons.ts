@@ -6,7 +6,8 @@ import { Gender, MaritalStatus } from "../../app/entities/Persons";
 
 
 const geraFakePersons = async (count: number): Promise<IPerson[]> => {
-    const usedImagens =  new Set<string>()
+    const usedImagens = new Set<string>()
+    const usedEmail = new Set<string>()
 
     const personPromise: Promise<IPerson>[] = []
 
@@ -29,6 +30,7 @@ const geraFakePersons = async (count: number): Promise<IPerson[]> => {
                 ])
 
 
+
             const name: string = faker.person.fullName({ sex: gender })
 
             const [firstName, lastName] = name.split(" ")
@@ -44,12 +46,20 @@ const geraFakePersons = async (count: number): Promise<IPerson[]> => {
             const city: string = faker.location.city()
             const profession: string = faker.person.jobType()
             const phone: string = faker.phone.number({ style: "international" });
-            const email = faker.internet.email({
-                firstName: firstName,
-                lastName: lastName || "",
-                provider: "gmail.com"
-            })
 
+            let email: string
+            let attemptsEmail = 0
+            do {
+                email = faker.internet.email({
+                    firstName: firstName,
+                    lastName: lastName || "",
+                    provider: "gmail.com"
+                });
+            } while (usedEmail.has(email) && attemptsEmail < 10)
+
+            usedEmail.add(email)
+
+            
             let imageUrl: string
             let attemptsImage = 0
 
@@ -80,7 +90,7 @@ const geraFakePersons = async (count: number): Promise<IPerson[]> => {
 
     const personDB = await Promise.all(personPromise)
 
-   fs.writeFileSync('PersonReference.json', JSON.stringify(personDB, null, 2))
+    fs.writeFileSync('PersonReference.json', JSON.stringify(personDB, null, 2))
 
     return personDB
 }
