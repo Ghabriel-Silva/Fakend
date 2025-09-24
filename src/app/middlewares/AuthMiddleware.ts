@@ -1,5 +1,5 @@
 import { NextFunction, Request, Response } from "express"
-import { ITokenData } from "../interfaces/ILogin";
+import { ITokenData } from "../interfaces/User/ILogin";
 
 import Auth from "../utils/Auth"
 

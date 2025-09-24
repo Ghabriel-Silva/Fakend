@@ -1,4 +1,4 @@
-import { IUserInput } from "../../app/interfaces/IUser";
+import { IUserInput } from "../../app/interfaces/User/IUser";
 import { faker } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 import fs from "fs";

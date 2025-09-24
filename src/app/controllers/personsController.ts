@@ -3,7 +3,6 @@ import { IPerson } from "../interfaces/Person/IPerson";
 import PersonRepository from "../repository/PersonsRepository";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { Gender, MaritalStatus } from "../entities/Persons";
-import { object } from "yup";
 import { IPersonFilterOptions } from "../interfaces/Person/IPersonFilterOptions";
 
 class PersonControler {

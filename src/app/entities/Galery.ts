@@ -6,6 +6,9 @@ export class Galery {
     @PrimaryGeneratedColumn('increment')
     id: number
 
+    @Column('varchar', { nullable: false, length: 50 })
+    category: string
+
     @Column('varchar', { nullable: false, length: 100 })
     description: string
 

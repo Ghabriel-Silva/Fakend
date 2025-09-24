@@ -1,7 +1,7 @@
 import { Response, Request, Router } from "express";
 import UserRepository from "../repository/UserRepository";
-import { IUserOutput } from "../interfaces/IUser";
-import { IResponseSuccess } from "../interfaces/IReponseSucess";
+import { IUserOutput } from "../interfaces/User/IUser";
+import { IResponseSuccess } from "../interfaces/User/IReponseSucess";
 
 
 class AuthControler {

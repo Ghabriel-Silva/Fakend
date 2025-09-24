@@ -1,6 +1,6 @@
 import { Router, Response, Request } from "express";
 import ProductRepository from "../repository/ProductRepository";
-import { IResponseSuccess } from "../interfaces/IReponseSucess"
+import { IResponseSuccess } from "../interfaces/User/IReponseSucess"
 import { IProduct } from "../interfaces/Products/IProducts"
 import ErrorExtension from "../utils/ErrorExtensions";
 

@@ -1,11 +1,11 @@
 import User from "../entities/Users";
 import { AppDataSource } from "../../database/dataSource";
-import { IUserInput, IUserOutput, IUserPublic } from "../interfaces/IUser";
-import { ITokenData } from "../interfaces/ILogin";
-import { ILogin } from "../interfaces/ILogin";
+import { IUserInput, IUserOutput, IUserPublic } from "../interfaces/User/IUser";
+import { ITokenData } from "../interfaces/User/ILogin";
+import { ILogin } from "../interfaces/User/ILogin";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { formatSuccess } from "../utils/ReponseSuccess"
-import { IResponseSuccess } from "../interfaces/IReponseSucess";
+import { IResponseSuccess } from "../interfaces/User/IReponseSucess";
 import bcrypt from "bcrypt"
 import UserSchema from "../utils/validations/UserSchema";
 import UserSchemaEdite from "../utils/validations/UserSchemaEdite";
@@ -14,8 +14,8 @@ import * as yup from "yup";
 import Auth from "../utils/Auth";
 import { MoreThan } from "typeorm";
 import { addDays } from 'date-fns'; //Ela fornece funções prontas para manipular datas de forma imutável (ou seja, não altera a data original).
-import { IEditeUser } from "../interfaces/IEditeUser";
-import { IChangePassword } from "../interfaces/IChangePassword";
+import { IEditeUser } from "../interfaces/User/IEditeUser";
+import { IChangePassword } from "../interfaces/User/IChangePassword";
 
 
 class UserRepository {

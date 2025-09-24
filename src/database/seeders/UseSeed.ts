@@ -1,4 +1,4 @@
-import { IUserInput } from "../../app/interfaces/IUser";
+import { IUserInput } from "../../app/interfaces/User/IUser";
 
 const useSeed: IUserInput = {
     name: "Gabriel",

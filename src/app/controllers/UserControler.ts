@@ -2,9 +2,9 @@ import { Response, Request, Router } from "express";
 import UserRepository from "../repository/UserRepository";
 import AutenticationMiddleware from "../middlewares/AuthMiddleware";
 import ErrorExtension from "../utils/ErrorExtensions";
-import { ITokenData } from "../interfaces/ILogin";
-import { IEditeUser } from "../interfaces/IEditeUser";
-import { IChangePassword } from "../interfaces/IChangePassword";
+import { ITokenData } from "../interfaces/User/ILogin";
+import { IEditeUser } from "../interfaces/User/IEditeUser";
+import { IChangePassword } from "../interfaces/User/IChangePassword";
 
 
 class UserController {

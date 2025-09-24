@@ -47,17 +47,15 @@ const ProductsGenerate = async (count: number): Promise<IProduct[]> => { //uma P
                 usedImages[keyword] = new Set();
             }
 
-            let image_url: string;
-            let attemptsImage = 0;
+            let image_url: string
+            let attemptsImage = 0
 
-            // Tenta pegar uma imagem única até 10 vezes
             do {
                 image_url = await getImageUrl(keyword);
                 attemptsImage++;
             } while (usedImages[keyword].has(image_url) && attemptsImage < 10); //repete apenas se os dois forem true
 
-            usedImages[keyword].add(image_url); // marca a URL como usada
-
+            usedImages[keyword].add(image_url); 
             return {
                 name,
                 description,
