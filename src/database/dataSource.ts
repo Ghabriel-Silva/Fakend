@@ -13,8 +13,12 @@ import { CreateColumsProducts1757848877069 } from "../database/migrations/175784
 import { GenerateFakeProdutcs1757848363698 } from "../database/migrations/1757848363698-GenerateFakeProdutcs"
 import { GenerateTablePerson1758549463002 } from "../database/migrations/1758549463002-GenerateTablePerson"
 import { GenerateFakePerson1758562484175 } from "../database/migrations/1758562484175-GenerateFakePerson"
+import { CreatGaleryTable1758673660616 } from "../database/migrations/1758673660616-CreatGaleryTable"
+
+
 import dotenv from "dotenv"
 import { Person } from "../app/entities/Persons"
+import { Galery } from "../app/entities/Galery"
 dotenv.config()
 
 export const AppDataSource = new DataSource({
@@ -26,7 +30,7 @@ export const AppDataSource = new DataSource({
     database: process.env.DB_NAME,
     synchronize: false,
     logging: false,
-    entities: [User, Product, Person],
+    entities: [User, Product, Person, Galery],
     migrations: [
         CreateUserTable1757162636821,      // cria a tabela inicialmente
         RenameBirthdateColunm1757168828987, // renomeia a coluna
@@ -38,7 +42,8 @@ export const AppDataSource = new DataSource({
         CreateColumsProducts1757848877069, //Gerando colunas created_at e update_at
         GenerateFakeProdutcs1757848363698, //Gernado produtos fakes para popular a tabela
         GenerateTablePerson1758549463002, //Gerando Tabela Person
-        GenerateFakePerson1758562484175 //Gerando dados falsos para person 
+        GenerateFakePerson1758562484175, //Gerando dados falsos para person 
+        CreatGaleryTable1758673660616 //Criando tabela galery
 
     ],
     subscribers: [],
