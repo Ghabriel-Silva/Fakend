@@ -9,11 +9,14 @@ export class Galery {
     @Column('varchar', { nullable: false, length: 50 })
     category: string
 
-    @Column('varchar', { nullable: false, length: 100 })
+    @Column('varchar', { nullable: false, length: 50 })
+    subcategory: string
+
+    @Column('text', { nullable: false })
     description: string
 
-    @Column('varchar', { nullable: false, length: 100 })
-    alt_description: string 
+    @Column('text', { nullable: false })
+    alt_description: string
 
     @Column('int', { nullable: false })
     width: number
@@ -25,11 +28,11 @@ export class Galery {
     url_full: string
 
     @Column('varchar', { nullable: false })
-    url_small:string;
+    url_small: string;
 
-    @CreateDateColumn({type:'timestamp'})
-    created_at:Date
+    @CreateDateColumn({ type: 'timestamp' })
+    created_at: Date
 
-    @UpdateDateColumn({type:'timestamp'})
-    updated_at:Date
+    @UpdateDateColumn({ type: 'timestamp' })
+    updated_at: Date
 }

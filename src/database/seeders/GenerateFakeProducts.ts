@@ -56,6 +56,7 @@ const ProductsGenerate = async (count: number): Promise<IProduct[]> => { //uma P
             } while (usedImages[keyword].has(image_url) && attemptsImage < 10); //repete apenas se os dois forem true
 
             usedImages[keyword].add(image_url); 
+            
             return {
                 name,
                 description,

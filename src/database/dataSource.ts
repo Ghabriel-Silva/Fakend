@@ -15,6 +15,10 @@ import { GenerateTablePerson1758549463002 } from "../database/migrations/1758549
 import { GenerateFakePerson1758562484175 } from "../database/migrations/1758562484175-GenerateFakePerson"
 import { CreatGaleryTable1758673660616 } from "../database/migrations/1758673660616-CreatGaleryTable"
 import { AddCollumToGalery1758740214518} from "../database/migrations/1758740214518-AddCollumToGalery"
+import {AddColumnCategory1758804333329 } from "../database/migrations/1758804333329-AddColumnCategory"
+import {AlterTableDescrciption1758811693616} from "../database/migrations/1758811693616-AlterTableDescrciption"
+import {GenerateFakeImagens1758804549315 } from "../database/migrations/1758804549315-GenerateFakeImagens"
+
 
 
 import dotenv from "dotenv"
@@ -45,7 +49,11 @@ export const AppDataSource = new DataSource({
         GenerateTablePerson1758549463002, //Gerando Tabela Person
         GenerateFakePerson1758562484175, //Gerando dados falsos para person 
         CreatGaleryTable1758673660616,//Criando tabela galery
-        AddCollumToGalery1758740214518 //Adicionando collumn 
+        AddCollumToGalery1758740214518, //Adicionando collumn category
+        AddColumnCategory1758804333329,//Adicionando collumn subcategory
+        AlterTableDescrciption1758811693616, // Alterando coluna description e description apra conter mais dados
+        GenerateFakeImagens1758804549315 //Gerando Images fakes para teste
+
     ],
     subscribers: [],
 })

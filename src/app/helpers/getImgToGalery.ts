@@ -1,20 +1,23 @@
+import { IGalery } from "../interfaces/Galery/IGalery"
 import { IUnplashResponse, IUnsplashPhoto } from "../interfaces/Galery/IUnsplashReponse"
-
-const perPage: number = 30
-const page: number = 2
+import dotenv from "dotenv";
+dotenv.config();
 
 const setImage = new Set()
 
 
-const getImageToGalery = async (query: string): Promise<IUnsplashPhoto[]> => {
+const getImageToGalery = async (query: string): Promise<IGalery> => {
     try {
-        const response = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=${perPage}&page=${page}&client_id=${process.env.UNSPLASH_KEY}`);
+        const response = await fetch(`https://api.unsplash.com/search/photos?query=${encodeURIComponent(query)}&per_page=30&client_id=${process.env.UNSPLASH_KEY}`);
+
         if (!response.ok) throw new Error(`Erro na API Unsplash: ${response.status}`);
 
         const data = (await response.json()) as IUnplashResponse;
-        if (!data || data.results.length === 0) return [];
+        if (!data || data.results.length === 0) {
+            throw new Error('Image not Found')
+        }
 
-        // Filtrar urls não repetidas
+
         const url_full: string[] = data.results
             .map(obj => obj.urls.full)
             .filter(url => !setImage.has(url));
@@ -27,25 +30,29 @@ const getImageToGalery = async (query: string): Promise<IUnsplashPhoto[]> => {
 
         setImage.add(imgFullDefault);
 
+        const filterObjImage: IUnsplashPhoto | undefined = data.results.find(obj => obj.urls.full === imgFullDefault)
 
-        const respostaImage: IUnsplashPhoto[] = data.results
-            .filter(obj => !setImage.has(obj.urls.full)) //Filtra apenas os falso e os que forem true voce deixa para o map proeguir 
-            .map(obj => ({
-                description: obj.description,
-                alt_description: obj.alt_description,
-                width: obj.width,
-                height: obj.height,
-                urls: {
-                    full: obj.urls.full,
-                    small: obj.urls.small
-                }
-            }));
+        if (!filterObjImage) {
+            throw new Error("Imagem escolhida não encontrada no resultado");
+        }
 
-        return respostaImage;
+        const respImage: IGalery =
+        {
+            height: filterObjImage!.height,
+            width: filterObjImage!.width,
+            url_full: filterObjImage!.urls.full,
+            url_small: filterObjImage!.urls.small,
+            description: filterObjImage!.description,
+            alt_description: filterObjImage!.alt_description,
+        }
+
+
+
+        return respImage
 
     } catch (err) {
         console.error("Erro ao buscar imagem:", err);
-        return [];
+        throw new Error('Error to search images');
     }
 }
 
