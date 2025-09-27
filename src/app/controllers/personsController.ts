@@ -69,22 +69,19 @@ class PersonControler {
                 throw new ErrorExtension(400, 'Invalid marital Status value');
             }
         }
-        if (country && typeof country !== 'string') {
+        if (country && !/^[a-zA-ZÀ-ÿ\s]+$/.test(country as string)) {
             throw new ErrorExtension(400, 'Invalid country format');
         }
 
-
-        if (state && typeof state !== 'string') {
+        if (state && !/^[a-zA-ZÀ-ÿ\s]+$/.test(state as string)) {
             throw new ErrorExtension(400, 'Invalid state format');
         }
 
-
-        if (city && typeof city !== 'string') {
+        if (city && !/^[a-zA-ZÀ-ÿ\s]+$/.test(city as string)) {
             throw new ErrorExtension(400, 'Invalid city format');
         }
 
-
-        if (profession && typeof profession !== 'string') {
+        if (profession && !/^[a-zA-ZÀ-ÿ\s]+$/.test(profession as string)) {
             throw new ErrorExtension(400, 'Invalid profession format');
         }
 
@@ -122,14 +119,14 @@ class PersonControler {
         });
     }
     private async getFilterOptions(req: Request, res: Response): Promise<void> {
-        const dataFilterOptions:IPersonFilterOptions = await PersonRepository.getPersonOptions()
+        const dataFilterOptions: IPersonFilterOptions = await PersonRepository.getPersonOptions()
 
         res.status(200).json({
             status: 'success',
             data: dataFilterOptions
         })
     }
-    
+
 
 }
 

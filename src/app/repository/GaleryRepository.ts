@@ -6,8 +6,21 @@ import { IGalery } from "../interfaces/Galery/IGalery";
 class GaleryRepository {
     private static galeryRepository = AppDataSource.getRepository(Galery)
 
-    static async getAllImages():Promise<IGalery[]>{
-        return this.galeryRepository.find()
+    static async getAllImages(skip:number, take:number):Promise<[IGalery[], number]>{
+        return this.galeryRepository.findAndCount({
+            skip, //offset
+            take //limit 
+        })
+    }
+
+    static async getCategoryAndSubcategory():Promise<string[]> {
+        const category = await this.galeryRepository
+        .createQueryBuilder('galery')
+        .select("DISTINCT galery.category", "category")
+        .getRawMany()
+
+        return category.map(c=>c.category)
+
     }
 }
 
