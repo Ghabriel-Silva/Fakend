@@ -1,8 +1,9 @@
-import { Router, Request, Response, response } from "express";
+import e, { Router, Request, Response, response } from "express";
 import { IGalery } from "../interfaces/Galery/IGalery";
 import GaleryRepository from "../repository/GaleryRepository";
 import ErrorExtension from "../utils/ErrorExtensions";
-import { error } from "console";
+import { formatSuccess } from "../utils/ReponseSuccess"
+import { IGaleryOptions } from "../interfaces/Galery/IGaleryOptions";
 
 
 class GaleryController {
@@ -16,12 +17,13 @@ class GaleryController {
     private async inicializeRoutes() {
         this.router.get('/', this.galeryGetAllImages)
         this.router.get('/filter', this.galeryFilter)
+        this.router.get('/options', this.galeryOptions)
     }
 
     private async galeryGetAllImages(req: Request, res: Response): Promise<void> {
 
         const page = Number(req.query.page) || 1
-        const limit = Number(req.query.limit) || 10
+        const limit = Number(req.query.limit) || 50
 
         const skip = (page - 1) * limit //quantos registros você deve pular antes de começar a pegar.
 
@@ -46,21 +48,33 @@ class GaleryController {
 
 
     private async galeryFilter(req: Request, res: Response): Promise<void> {
-        // const page = Number(req.query.page) | 1
-        // const limit = Number(req.query.limit) | 10
-        const { category} = req.params
+        const category = typeof req.query.category === "string" ? req.query.category.toLowerCase() : undefined
+        const subcategory = typeof req.query.subcategory === "string" ? req.query.subcategory.toLowerCase() : undefined
 
-        const categoryBd: string[] = await GaleryRepository.getCategoryAndSubcategory()
-        if (category && !categoryBd.includes(category)) { //mudar por some para aceitar tanto maisucula como mnuscula
-            throw new ErrorExtension(404, 'Category not found, try already');
+        const categoriesResult = await GaleryRepository.getFilter(category, subcategory)
+
+        if (category && categoriesResult.length === 0) {
+            const categoryExist = await GaleryRepository.getFilter(category, undefined)
+            if (categoryExist.length === 0)
+                throw new ErrorExtension(404, 'Category not found')
         }
+        if (subcategory && categoriesResult.length === 0) {
+            const subcategoryExists = await GaleryRepository.getFilter(undefined, subcategory);
+            if (subcategoryExists.length === 0) {
+                throw new ErrorExtension(404, 'Subcategory not found');
+            }
+        }
+        res.status(200).json(
+            formatSuccess(categoriesResult, "Filter retrieved successfully")
+        )
+    }
 
-
-
-
-
-
-
+    
+    private async galeryOptions(req: Request, res: Response): Promise<void> {
+        const options: IGaleryOptions = await GaleryRepository.getCategoryAndSubcategory()
+        res.status(200).json(
+            formatSuccess(options, 'Available options in the database')
+        )
     }
 }
 

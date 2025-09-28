@@ -111,7 +111,6 @@ class PersonControler {
             throw new ErrorExtension(404, message);
         }
 
-
         res.status(200).json({
             status: 'success',
             message: 'Persons retrieved successfully',

@@ -60,7 +60,7 @@ class ProductControler {
         const minValue: number | undefined = min ? Number(min) : undefined
         const maxValue: number | undefined = max ? Number(max) : undefined
 
-        //validando se são numeros
+    
         if ((min !== undefined && isNaN(minValue!)) || (max !== undefined && isNaN(maxValue!))) {
             throw new ErrorExtension(400, "Min and Max must be valid numbers!")
         }
