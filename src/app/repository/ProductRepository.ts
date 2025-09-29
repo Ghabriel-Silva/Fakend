@@ -8,8 +8,11 @@ class ProductRepository {
     private static productRepository = AppDataSource.getRepository(Product)
 
 
-    static async getAllProducts(): Promise<IProduct[]> {
-        return await this.productRepository.find()
+    static async getAllProducts(skip:number, take:number): Promise<[IProduct[], number]> {
+        return await this.productRepository.findAndCount({
+            skip, 
+            take
+        })
     }
 
     static async getMinStockProducts(min: number): Promise<IProduct[]> {

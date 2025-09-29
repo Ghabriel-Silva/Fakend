@@ -7,11 +7,11 @@ import { IPersonFilterOptions } from "../interfaces/Person/IPersonFilterOptions"
 class PersonRepository {
     private static personRepository = AppDataSource.getRepository(Person)
 
-    static async allPerson(): Promise<IPerson[]> {
-        const dataPerson: IPerson[] = await this.personRepository.find()
-
-        return dataPerson
-
+    static async allPerson(skip:number, take:number): Promise<[IPerson[], number]> {
+        return await this.personRepository.findAndCount({
+            skip, 
+            take,
+        })
     }
 
     static async filterPerson(

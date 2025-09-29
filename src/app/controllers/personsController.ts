@@ -4,6 +4,7 @@ import PersonRepository from "../repository/PersonsRepository";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { Gender, MaritalStatus } from "../entities/Persons";
 import { IPersonFilterOptions } from "../interfaces/Person/IPersonFilterOptions";
+import { formatSuccess } from "../utils/ReponseSuccess";
 
 class PersonControler {
     router: Router
@@ -20,25 +21,31 @@ class PersonControler {
     }
 
     private async getAllPerson(req: Request, res: Response): Promise<void> {
-        const allPerson: IPerson[] = await PersonRepository.allPerson()
+        const page: number = Number(req.query.page) || 1
+        const limit: number = Number(req.query.limit) || 100
 
+        const skip: number = (page - 1) * limit
+
+        const [persons, total] = await PersonRepository.allPerson(skip, limit)
         res.status(200).json({
-            status: 'success',
-            mensage: allPerson.length ? 'Persons retrieved successfully' : 'Person not found',
-            data: allPerson
-        })
+            status: 'sucess',
+            message: 'Person retrieved  successfully',
+            page,
+            limit,
+            total,
+            totalPages: Math.ceil(total / limit),
+            data:persons
+        }
+        )
     }
+
 
     private async getFilterPerson(req: Request, res: Response): Promise<void> {
         const { name, gender, age, maritalStatus, country, state, city, profession } = req.query;
 
-
         if (name && typeof name !== 'string') {
             throw new ErrorExtension(400, 'Invalid name format');
         }
-
-
-
         let ageValue: number | undefined = undefined;
         if (age) {
             const parsedAge = parseInt(age as string, 10);
@@ -111,19 +118,17 @@ class PersonControler {
             throw new ErrorExtension(404, message);
         }
 
-        res.status(200).json({
-            status: 'success',
-            message: 'Persons retrieved successfully',
-            data: filterPerson
-        });
+        res.status(200).json(
+            formatSuccess(filterPerson, 'Persons retrieved successfully')
+        );
     }
+
     private async getFilterOptions(req: Request, res: Response): Promise<void> {
         const dataFilterOptions: IPersonFilterOptions = await PersonRepository.getPersonOptions()
 
-        res.status(200).json({
-            status: 'success',
-            data: dataFilterOptions
-        })
+        res.status(200).json(
+            formatSuccess(dataFilterOptions, 'Available options in the database')
+        )
     }
 
 

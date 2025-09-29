@@ -1,5 +1,4 @@
-import e, { Router, Request, Response, response } from "express";
-import { IGalery } from "../interfaces/Galery/IGalery";
+import { Router, Request, Response, response } from "express";
 import GaleryRepository from "../repository/GaleryRepository";
 import ErrorExtension from "../utils/ErrorExtensions";
 import { formatSuccess } from "../utils/ReponseSuccess"
@@ -22,8 +21,8 @@ class GaleryController {
 
     private async galeryGetAllImages(req: Request, res: Response): Promise<void> {
 
-        const page = Number(req.query.page) || 1
-        const limit = Number(req.query.limit) || 50
+        const page:number = Number(req.query.page) || 1
+        const limit:number = Number(req.query.limit) || 50
 
         const skip = (page - 1) * limit //quantos registros você deve pular antes de começar a pegar.
 
