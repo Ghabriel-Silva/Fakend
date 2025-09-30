@@ -17,14 +17,14 @@ class AuthControler {
     }
 
 
-    private async loginUser(req: Request, res: Response) {
+    private async loginUser(req: Request, res: Response):Promise<void> {
         const verifyUser = await UserRepository.loginVerification(req.body)
         res.status(200).json(verifyUser)
     }
-    private async createdUser(req: Request, res: Response) {
+    private async createdUser(req: Request, res: Response):Promise<void> {
         const ipAddress = req.ip || "0.0.0.0" // fallback caso req.ip seja undefined
 
-        const userCreated: IResponseSuccess<IUserOutput> = await UserRepository.newUser(req.body, ipAddress)
+        const userCreated: IResponseSuccess<null> = await UserRepository.newUser(req.body, ipAddress)
         res.status(200).json(userCreated)
     }
 
