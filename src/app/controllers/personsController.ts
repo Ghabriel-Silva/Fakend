@@ -28,7 +28,7 @@ class PersonControler {
 
         const [persons, total] = await PersonRepository.allPerson(skip, limit)
         res.status(200).json({
-            status: 'sucess',
+            status: 'success',
             message: 'Person retrieved  successfully',
             page,
             limit,

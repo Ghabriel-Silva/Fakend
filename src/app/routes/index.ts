@@ -7,9 +7,9 @@ import galeryRoutes from "../controllers/GaleryControler";
 
 const routers = Router()
 
-routers.use('/auth', AuthRouter)
-routers.use('/user', UserRouter)
-routers.use('/products', ProductRouter)
-routers.use('/person', PersonRouter)
-routers.use('/galery', galeryRoutes)
+routers.use('/api/v1/auth', AuthRouter)
+routers.use('/api/v1/user', UserRouter)
+routers.use('/api/v1/products', ProductRouter)
+routers.use('/api/v1/person', PersonRouter)
+routers.use('/api/v1/galery', galeryRoutes)
 export default routers

@@ -18,6 +18,10 @@ import { AddCollumToGalery1758740214518} from "../database/migrations/1758740214
 import {AddColumnCategory1758804333329 } from "../database/migrations/1758804333329-AddColumnCategory"
 import {AlterTableDescrciption1758811693616} from "../database/migrations/1758811693616-AlterTableDescrciption"
 import {GenerateFakeImagens1758804549315 } from "../database/migrations/1758804549315-GenerateFakeImagens"
+import {AddProducts1759164568016 } from "../database/migrations/1759164568016-AddProducts"
+import {AddGaleryData1759166359997} from "../database/migrations/1759166359997-AddGaleryData"
+import {PopulandoGaleryData1759239430061} from "../database/migrations/1759239430061-PopulandoGaleryData"
+
 
 
 
@@ -52,8 +56,10 @@ export const AppDataSource = new DataSource({
         AddCollumToGalery1758740214518, //Adicionando collumn category
         AddColumnCategory1758804333329,//Adicionando collumn subcategory
         AlterTableDescrciption1758811693616, // Alterando coluna description e description apra conter mais dados
-        GenerateFakeImagens1758804549315 //Gerando Images fakes para teste
-
+        GenerateFakeImagens1758804549315, //Gerando Images fakes para teste
+        AddProducts1759164568016, //Populando banco de dados products para teste e removendo todos dados da tabela
+        AddGaleryData1759166359997, //Populando galery com dados
+        PopulandoGaleryData1759239430061 //Populando Banco de dados Galery
     ],
     subscribers: [],
 })

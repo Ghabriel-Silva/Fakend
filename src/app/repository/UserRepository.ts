@@ -52,7 +52,7 @@ class UserRepository {
         return formatSuccess(token, 'Login Efectuado with success')
     }
 
-    static async newUser(dataCreate: IUserInput, ipAddress: string): Promise<IResponseSuccess<IUserOutput>> {
+    static async newUser(dataCreate: IUserInput, ipAddress: string): Promise<IResponseSuccess<null>> {
         try {
             //Primeiro valido os dados com Yup
             await UserSchema.validate(dataCreate, { abortEarly: false })
@@ -74,9 +74,9 @@ class UserRepository {
                 }
             })
 
-            const MAX_USERS_PER_IP = 4
+            const MAX_USERS_PER_IP = 10
             if (countByIp >= MAX_USERS_PER_IP) {
-                throw new ErrorExtension(400, "Limite de usuários criados por este IP atingido")
+                throw new ErrorExtension(400, "Limit of users created by this IP reached")
             }
 
             //Despois criptografo  a  senha
@@ -92,7 +92,7 @@ class UserRepository {
             }
             //depois coloco no banco de dados
             const createdUser = await this.userRepository.save(userToSave)
-            return formatSuccess(createdUser, 'User created with success!')
+            return formatSuccess(null, 'User created with success!')
 
         } catch (err) {
             if (err instanceof yup.ValidationError) {

@@ -4,9 +4,18 @@ import { IProduct } from "../../app/interfaces/Products/IProducts";
 import { getImageUrl } from "../../app/helpers/getImageUrl";
 
 const categories = [
-    { name: "Electronics & Home Appliances", keywords: ["TV", "Refrigerator", "Microwave", "Laptop", "Camera"] },
-    { name: "Furniture", keywords: ["Sofa", "Chair", "Table", "Bed", "Desk"] },
-    { name: "Clothing", keywords: ["Shirt", "Pants", "Jacket", "Dress", "Shoes"] }
+  { name: "Electronics & Home Appliances", keywords: ["TV", "Refrigerator", "Microwave", "Laptop", "Camera"] },
+  { name: "Furniture", keywords: ["Sofa", "Chair", "Table", "Bed", "Desk"] },
+  { name: "Clothing", keywords: ["Shirt", "Pants", "Jacket", "Dress", "Shoes"] },
+  { name: "Books & Stationery", keywords: ["Novel", "Notebook", "Pen", "Magazine", "Dictionary"] },
+  { name: "Beauty & Personal Care", keywords: ["Shampoo", "Soap", "Perfume", "Makeup", "Lotion"] },
+  { name: "Sports & Outdoors", keywords: ["Bicycle", "Tennis Racket", "Tent", "Backpack", "Shoes"] },
+  { name: "Toys & Games", keywords: ["Puzzle", "Action Figure", "Board Game", "Lego", "Doll"] },
+  { name: "Automotive", keywords: ["Car Accessories", "Tire", "Motor Oil", "GPS", "Helmet"] },
+  { name: "Groceries & Food", keywords: ["Rice", "Pasta", "Snacks", "Fruit", "Vegetables"] },
+  { name: "Pets & Accessories", keywords: ["Dog Food", "Cat Toy", "Aquarium", "Leash", "Collar"] },
+  { name: "Music & Instruments", keywords: ["Guitar", "Piano", "Microphone", "Drums", "Sheet Music"] },
+  { name: "Tech Accessories", keywords: ["Phone Case", "Charger", "Headphones", "USB Cable", "Power Bank"] }
 ];
 
 // Armazena URLs já usadas por keyword
