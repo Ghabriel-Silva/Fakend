@@ -21,8 +21,8 @@ class GaleryController {
 
     private async galeryGetAllImages(req: Request, res: Response): Promise<void> {
 
-        const page:number = Number(req.query.page) || 1
-        const limit:number = Number(req.query.limit) || 50
+        const page: number = Number(req.query.page) || 1
+        const limit: number = Number(req.query.limit) || 100
 
         const skip = (page - 1) * limit //quantos registros você deve pular antes de começar a pegar.
 
@@ -63,12 +63,17 @@ class GaleryController {
                 throw new ErrorExtension(404, 'Subcategory not found');
             }
         }
+
+        if (categoriesResult.length === 0) {
+            throw new ErrorExtension(404, 'No data found for the given filters');
+        }
+
         res.status(200).json(
             formatSuccess(categoriesResult, "Filter retrieved successfully")
         )
     }
 
-    
+
     private async galeryOptions(req: Request, res: Response): Promise<void> {
         const options: IGaleryOptions = await GaleryRepository.getCategoryAndSubcategory()
         res.status(200).json(

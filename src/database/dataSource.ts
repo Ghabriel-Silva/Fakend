@@ -14,13 +14,13 @@ import { GenerateFakeProdutcs1757848363698 } from "../database/migrations/175784
 import { GenerateTablePerson1758549463002 } from "../database/migrations/1758549463002-GenerateTablePerson"
 import { GenerateFakePerson1758562484175 } from "../database/migrations/1758562484175-GenerateFakePerson"
 import { CreatGaleryTable1758673660616 } from "../database/migrations/1758673660616-CreatGaleryTable"
-import { AddCollumToGalery1758740214518} from "../database/migrations/1758740214518-AddCollumToGalery"
-import {AddColumnCategory1758804333329 } from "../database/migrations/1758804333329-AddColumnCategory"
-import {AlterTableDescrciption1758811693616} from "../database/migrations/1758811693616-AlterTableDescrciption"
-import {GenerateFakeImagens1758804549315 } from "../database/migrations/1758804549315-GenerateFakeImagens"
-import {AddProducts1759164568016 } from "../database/migrations/1759164568016-AddProducts"
-import {AddGaleryData1759166359997} from "../database/migrations/1759166359997-AddGaleryData"
-import {PopulandoGaleryData1759239430061} from "../database/migrations/1759239430061-PopulandoGaleryData"
+import { AddCollumToGalery1758740214518 } from "../database/migrations/1758740214518-AddCollumToGalery"
+import { AddColumnCategory1758804333329 } from "../database/migrations/1758804333329-AddColumnCategory"
+import { AlterTableDescrciption1758811693616 } from "../database/migrations/1758811693616-AlterTableDescrciption"
+import { GenerateFakeImagens1758804549315 } from "../database/migrations/1758804549315-GenerateFakeImagens"
+import { AddProducts1759164568016 } from "../database/migrations/1759164568016-AddProducts"
+import { AddGaleryData1759166359997 } from "../database/migrations/1759166359997-AddGaleryData"
+import { PopulandoGaleryData1759239430061 } from "../database/migrations/1759239430061-PopulandoGaleryData"
 
 
 
@@ -32,11 +32,12 @@ dotenv.config()
 
 export const AppDataSource = new DataSource({
     type: process.env.DB_TYPE as any,
-    host: process.env.DB_HOST,
-    port: Number(process.env.DB_PORT),
-    username: process.env.DB_USER,
-    password: process.env.DB_PASSWORD,
-    database: process.env.DB_NAME,
+    url: process.env.DB_URL,
+    // host: process.env.DB_HOST,
+    // port: Number(process.env.DB_PORT),
+    // username: process.env.DB_USER,
+    // password: process.env.DB_PASSWORD,
+    // database: process.env.DB_NAME,
     synchronize: false,
     logging: false,
     entities: [User, Product, Person, Galery],
